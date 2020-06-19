@@ -1,0 +1,40 @@
+{
+  "name": "pimatic-broadlink",
+  "description": "Plugin for connecting a Pimatic system to broadlink devices",
+  "author": {
+    "name": "Bert Gierveld",
+    "email": "gitbertreb@gmail.com",
+    "url": "https://github.com/bertreb"
+  },
+  "main": "pimatic-broadlink",
+  "files": [
+    "pimatic-broadlink.coffee",
+    "pimatic-broadlink-config-schema.coffee",
+    "device-config-schema.coffee",
+    "README.md",
+    "LICENSE",
+    "broadlink_cli.py",
+    "broadlink_discovery.py"
+  ],
+  "homepage": "https://github.com/bertreb/pimatic-broadlink.git",
+  "keywords": [
+    "pimatic",
+    "broadlink"
+  ],
+  "version": "0.0.1",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bertreb/pimatic-broadlink.git"
+  },
+  "configSchema": "pimatic-broadlink-config-schema.coffee",
+  "dependencies": {
+    "python-shell": "^2.0.1"
+  },
+  "peerDependencies": {
+    "pimatic": "0.9.*"
+  },
+  "engines": {
+    "node": ">=4",
+    "npm": ">=2"
+  }
+}
