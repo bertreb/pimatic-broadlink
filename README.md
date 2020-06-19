@@ -23,7 +23,7 @@ Per button a remote control function can be defined.
 configuration per button:
 - id: the pimatic id of the button
 - text: the text used on the button in the gui
-- commandFile: the name of the commandFile (no directory path!)
+- commandFile: the filename of the commandFile (no directory path!)
 
 Per command a commandfile is used. This commandfile contains the codestring send to the device (TV, etc)
 The commandfile is automatically created when adding a new button and the file does not exsist.
