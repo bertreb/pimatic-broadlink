@@ -25,8 +25,8 @@ module.exports = {
             text:
               description: "The friendly name on the button"
               type: "string"
-            commandString:
-              description: "The commandstring"
+            commandFile:
+              description: "The filename of the commandfile"
               type: "string"
       deviceType:
         description: "The broadlink device type"

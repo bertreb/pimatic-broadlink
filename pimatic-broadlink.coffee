@@ -77,13 +77,13 @@ module.exports = (env) ->
 
       #super()
       for b in @config.buttons
-        unless fs.existsSync(path.join(@directory,b.commandString))
-          env.logger.info "Command unknown, going into learnmode, please press key '#{b.commandString}' on remote..."
-          @learn(b.commandString)
+        unless fs.existsSync(path.join(@directory,b.commandFile))
+          env.logger.info "Command unknown, going into learnmode, please press key '#{b.commandFile}' on remote..."
+          @learn(b.commandFile)
           .then(()=>
-            env.logger.info "New command '#{b.commandString}' learned and saved"
+            env.logger.info "New command '#{b.commandFile}' learned and saved"
           ).catch((err)=>
-            env.logger.info "Command '#{b.commandString}' unknown, please learn other way " + err
+            env.logger.info "Command '#{b.commandFile}' unknown, please learn other way " + err
           )
 
     learn:(_name)=>
@@ -114,7 +114,7 @@ module.exports = (env) ->
           @_lastPressedButton = b.id
           @emit 'button', b.id
           command = b.onPress
-          commandFile = path.join("@"+@directory,b.commandString)
+          commandFile = path.join("@"+@directory,b.commandFile)
           sendOptions =
             mode: 'text'
             pythonPath: 'python3'
