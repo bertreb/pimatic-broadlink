@@ -28,3 +28,5 @@ configuration per button:
 Per command a commandfile is used. This commandfile contains the codestring send to the device (TV, etc)
 The commandfile is automatically created when adding a new button and the file does not exsist.
 After adding a new button and saving the device config, the learning mode is started and you need to push button on your remote to learn the command.
+
+The commandfiles are saved in the directory /\<pimatic home directory\>/learned-codes. Commandfiles can be added manually. They need to contain the commandString (used by the python-broadlink lib). There is 1 commandFile per command. The directory is automatically created (if not exsist) and on upgrading or reinstalling of the plugin, the directory will be kept.
