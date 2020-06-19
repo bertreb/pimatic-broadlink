@@ -1,11 +1,11 @@
 # pimatic-broadlink
-Plugin for using Broadlink products in Pimatic
+Plugin for using Broadlink products in Pimatic. The plugin is based on python-broadlink library from [mjg59](https://github.com/mjg59/python-broadlink)
+
 
 Installation of the plugin
 ----
 
 Before installation of this plugin the python library broadlink needs to be installed.
-The plugin is based on python-broadlink library from [mjg59](https://github.com/mjg59/python-broadlink)
 
 Use:
 ```
