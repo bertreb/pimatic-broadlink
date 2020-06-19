@@ -21,15 +21,22 @@ module.exports = (env) ->
 
       @framework.deviceManager.on('discover', (eventData) =>
         @framework.deviceManager.discoverMessage 'pimatic-broadlink', 'Searching for new devices'
-        wrappy.discover()
-        .then((devs)=>
-          devices =_.flatten(devs)
+        discoverOptions =
+          mode: 'json'
+          pythonPath: 'python3'
+          pythonOptions: ['-u']
+          scriptPath: __dirname
+          args: [] 
+        ps.PythonShell.run('broadlink_discovery.py', discoverOptions, (err, results) =>
+          if err
+            env.logger.debug("error:" + err)
+            return
+          devices =_.flatten(results)          
           for _device,i in devices
             _newId = _device.type + "_" + _device.mac.split(":").join("")
             if _.find(@framework.deviceManager.devicesConfig,(d) => d.id.indexOf(_newId)>=0)
               env.logger.info "Device '" + _newId + "' already in config"
             else
-              env.logger.info "Device: " + JSON.stringify(_device,null,2)
               config =
                 id: _newId
                 name: _newId
@@ -108,7 +115,6 @@ module.exports = (env) ->
           @emit 'button', b.id
           command = b.onPress
           commandFile = path.join("@"+@directory,b.commandString)
-          env.logger.info "commandFile: " + commandFile
           sendOptions =
             mode: 'text'
             pythonPath: 'python3'
