@@ -21,14 +21,16 @@
     "pimatic",
     "broadlink"
   ],
-  "version": "0.0.1",
+  "version": "0.0.2",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/bertreb/pimatic-broadlink.git"
   },
   "configSchema": "pimatic-broadlink-config-schema.coffee",
   "dependencies": {
-    "python-shell": "^2.0.1"
+    "python-shell": "^2.0.1",
+    "lodash": "^4.17.15",
+    "path": "^0.12.7"
   },
   "peerDependencies": {
     "pimatic": "0.9.*"
