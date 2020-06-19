@@ -22,10 +22,11 @@ for device in devices:
         data.append({ "type": device.type,
             "devtype": "{}".format(hex(device.devtype)),
             "host": device.host[0],
-            "mac": ":".join(format(x, '02x') for x in device.mac)
+            "mac": ":".join(format(x, '02x') for x in device.mac),
+            "error": None
         });
 
     else:
-        print('{"error": "Error authenticating"}')
+    	data.append({"error": "Error authenticating"})
 print(json.dumps(data))
 

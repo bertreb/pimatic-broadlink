@@ -7,7 +7,7 @@ module.exports = (env) ->
 
   _ = require('lodash')
 
-  class RemotePlugin extends env.plugins.Plugin
+  class BroadlinkPlugin extends env.plugins.Plugin
     init: (app, @framework, @config) =>
 
       pluginConfigDef = require './pimatic-broadlink-config-schema'
@@ -29,23 +29,28 @@ module.exports = (env) ->
           args: [] 
         ps.PythonShell.run('broadlink_discovery.py', discoverOptions, (err, results) =>
           if err
-            env.logger.debug("error:" + err)
+            env.logger.debug("Device discovery error, PythonShell: " + err)
             return
-          devices =_.flatten(results)          
+          devices =_.flatten(results)
+          env.logger.debug "Discovered devices: "+ JSON.stringify(devices,null,2)
+          env.logger.info "tot hier 4"
           for _device,i in devices
-            _newId = _device.type + "_" + _device.mac.split(":").join("")
-            if _.find(@framework.deviceManager.devicesConfig,(d) => d.id.indexOf(_newId)>=0)
-              env.logger.info "Device '" + _newId + "' already in config"
+            unless _device.error?
+              _newId = _device.type + "_" + _device.mac.split(":").join("")
+              if _.find(@framework.deviceManager.devicesConfig,(d) => d.id.indexOf(_newId)>=0)
+                env.logger.info "Device '" + _newId + "' already in config"
+              else
+                config =
+                  id: _newId
+                  name: _newId
+                  class: "RemoteDevice"
+                  host: _device.host
+                  mac: _device.mac
+                  deviceCode: _device.devtype
+                  deviceType: _device.type
+                @framework.deviceManager.discoveredDevice("Broadlink", config.id, config)
             else
-              config =
-                id: _newId
-                name: _newId
-                class: "RemoteDevice"
-                host: _device.host
-                mac: _device.mac
-                deviceCode: _device.devtype
-                deviceType: _device.type
-              @framework.deviceManager.discoveredDevice("Broadlink", config.id, config)
+              env.logger.debug "Device discovery error"
         )
       )
 
@@ -137,5 +142,5 @@ module.exports = (env) ->
       super()
 
 
-  plugin = new RemotePlugin
+  plugin = new BroadlinkPlugin
   return plugin
