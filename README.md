@@ -1,5 +1,5 @@
 # pimatic-broadlink
-Plugin for using Broadlink products in Pimatic. The plugin is based on python-broadlink library from [mjg59](https://github.com/mjg59/python-broadlink)
+Plugin for using Broadlink products in Pimatic. The plugin is based on the python-broadlink library from [mjg59](https://github.com/mjg59/python-broadlink)
 
 
 Installation of the plugin
