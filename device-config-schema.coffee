@@ -1,7 +1,7 @@
 module.exports = {
   title: "pimatic-broadlink device config schemas"
-  RemoteDevice: {
-    title: "Broadlink config options"
+  BroadlinkRemote: {
+    title: "BroadlinkRemote config options"
     type: "object"
     extensions: ["xLink", "xAttributeOptions"]
     properties:

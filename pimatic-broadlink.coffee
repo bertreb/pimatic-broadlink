@@ -10,13 +10,22 @@ module.exports = (env) ->
   class BroadlinkPlugin extends env.plugins.Plugin
     init: (app, @framework, @config) =>
 
+      oldClassName = "RemoteDevice"
+      newClassName = "BroadlinkRemote"
+      for device,i in @framework.config.devices
+        className = device.class
+        #convert RemoteDevice to BroadlinkRemote
+        if className == oldClassName
+          @framework.config.devices[i].class = newClassName
+          env.logger.debug "Class '#{oldClassName}' of device '#{device.id}' migrated to #{newClassName}"
+
       pluginConfigDef = require './pimatic-broadlink-config-schema'
       @configProperties = pluginConfigDef.properties
 
       deviceConfigDef =  require("./device-config-schema")
-      @framework.deviceManager.registerDeviceClass('RemoteDevice', {
-        configDef: deviceConfigDef.RemoteDevice,
-        createCallback: (config, lastState) => new RemoteDevice(config, lastState, @framework, @)
+      @framework.deviceManager.registerDeviceClass('BroadlinkRemote', {
+        configDef: deviceConfigDef.BroadlinkRemote,
+        createCallback: (config, lastState) => new BroadlinkRemote(config, lastState, @framework, @)
       })
 
       @framework.deviceManager.on('discover', (eventData) =>
@@ -26,7 +35,7 @@ module.exports = (env) ->
           pythonPath: 'python3'
           pythonOptions: ['-u']
           scriptPath: __dirname
-          args: [] 
+          args: []
         ps.PythonShell.run('broadlink_discovery.py', discoverOptions, (err, results) =>
           if err
             env.logger.debug("Device discovery error, PythonShell: " + err)
@@ -43,7 +52,7 @@ module.exports = (env) ->
                 config =
                   id: _newId
                   name: _newId
-                  class: "RemoteDevice"
+                  class: "BroadlinkRemote"
                   host: _device.host
                   mac: _device.mac
                   deviceCode: _device.devtype
@@ -55,19 +64,19 @@ module.exports = (env) ->
       )
 
 
-  class RemoteDevice extends env.devices.ButtonsDevice
+  class BroadlinkRemote extends env.devices.ButtonsDevice
 
     constructor: (@config, lastState, @framework, @plugin) ->
       #@config = config
       super(@config)
-      #@id = @config.id
-      #@name = @config.name
+      @id = @config.id
+      @name = @config.name
 
       @root = path.resolve @framework.maindir, '../..'
       @directory = path.join(@root,"learned-codes")
       unless fs.existsSync(@directory)
         fs.mkdir(@directory, (err)=>
-          if err 
+          if err
             env.logger.debug "Error creating learned-codes directory"
             return
         )
@@ -79,17 +88,22 @@ module.exports = (env) ->
 
       @_destroyed = false
 
-
-      #super()
+      newFound = 0
+      newButton = {}
       for b in @config.buttons
         unless fs.existsSync(path.join(@directory,b.commandFile))
-          env.logger.info "Command unknown, going into learnmode, please press key '#{b.commandFile}' on remote..."
-          @learn(b.commandFile)
-          .then(()=>
-            env.logger.info "New command '#{b.commandFile}' learned and saved"
-          ).catch((err)=>
-            env.logger.info "Command '#{b.commandFile}' unknown, please learn other way " + err
-          )
+          newButton = b
+          newFound +=1
+      if newFound is 1
+        env.logger.info "Command unknown, going into learnmode, please press key '#{newButton.commandFile}' on remote..."
+        @learn(newButton.commandFile)
+        .then(()=>
+          env.logger.info "New command '#{newButton.commandFile}' learned and saved"
+        ).catch((err)=>
+          env.logger.info "Command '#{newButton.commandFile}' unknown, please learn other way " + err
+        )
+      if newFound > 1
+        throw new Error("Detected #{newFound} new buttons, only 1 new button at a time can be added!")
 
     learn:(_name)=>
       return new Promise((resolve,reject) =>
@@ -103,7 +117,7 @@ module.exports = (env) ->
         pyshell.on 'message', (message) =>
           env.logger.debug "Message: " + message
         pyshell.end((err,code,signal) =>
-          if err 
+          if err
             env.logger.debug "Error handled: " + err
             reject(err)
           resolve();
@@ -125,12 +139,13 @@ module.exports = (env) ->
             pythonPath: 'python3'
             scriptPath: __dirname
             args: ['--device',@_device,'--send',commandFile]
-          
+
           if not @_destroyed
             return ps.PythonShell.run('broadlink_cli.py', sendOptions, (err) =>
               if err
                 env.logger.debug "Error sending command: " + err
-                Promise.reject err
+                #Promise.reject err
+                return
               env.logger.debug "Command sent"
             )
           else
