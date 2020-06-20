@@ -31,9 +31,9 @@ After adding a new button and saving the device config, the learning mode is sta
 
 The commandfiles are saved in the directory \<pimatic home directory\>/learned-codes. Commandfiles can be added manually. They need to contain the commandString (used by the python-broadlink lib). There is 1 commandFile per command. The filename is mostly something like 'TV.onoff'. The directory is automatically created (if not exsist) and on upgrading or reinstalling of the plugin, the directory will be kept.
 
-You can add 1 new button to be learned, at a time. 
+You can add 1 new button to be learned, at a time.
+
 ---
 The minimum requirement for node is 10.
 
 You could backup Pimatic before you are using this plugin!
-
