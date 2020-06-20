@@ -8,7 +8,7 @@ The following devices are currently supported:
 - RM4 and RM4C mini blasters
 
 
-Preparation
+Installation
 ----
 0. Python3 needs to be installed.
 1. Install the python library broadlink.
@@ -17,7 +17,10 @@ In commandline mode:
 ```
 sudu pip3 install broadlink
 ```
-2. Configure the wifi of the broadlink device via the Broadlink app (easy but you will need to connect to the broadlink cloud) or use the following steps:
+2. Install the plugin
+The plugin can be installed via the gui or adding it to the config.json.
+
+3. Configure the wifi of the broadlink device via the Broadlink app (easy but you will need to connect to the broadlink cloud) or use the following steps:
 - Put the broadlink device into AP Mode = Long press (>10 secs) the reset button until the blue LED is blinking quickly.
 - Long press again until blue LED is blinking slowly.
 - Manually connect to the WiFi SSID named BroadlinkProv (or Broadlink_WIFI_device).
@@ -40,12 +43,7 @@ Follow the steps:
 sudo python3 broadlink_cli.py --joinwifi SSID PASSPHRASE
 ```
 The broadlink device should now connect to the configured wifi. You can reconnect to the normal network.
-
-Plugin installation
-----
-The next step is the installation of the plugin pimatic-broadlink. It can be installed via the gui or adding it to the config.json.
-
-This plugin contains a discovery function for broadlink devices and a RemoteDevice for remote controlling TV's, etc, via a broadlink device.  
+  
 
 Adding the BroadlinkRemote device
 ----
