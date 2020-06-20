@@ -1,16 +1,26 @@
 # pimatic-broadlink
 Plugin for using Broadlink products in Pimatic. The plugin is based on the python-broadlink library from [mjg59](https://github.com/mjg59/python-broadlink)
 
+The following devices are currently supported:
+- RM Pro (referred to as RM2 in the codebase)
+- A1 sensor platform devices
+- RM3 mini IR blaster
+- RM4 and RM4C mini blasters
 
-Installation of the plugin
+
+Preparation
 ----
+1. Configure the wifi of the broadlink device via the Broadlink app.
 
-Before installation of this plugin the python library broadlink needs to be installed.
+2. Install the python library broadlink.
 
-Use:
+In commandline mode:
 ```
 sudu pip3 install broadlink
 ```
+
+Plugin installation
+----
 The next step is the installation of the plugin pimatic-broadlink. It can be installed via the gui or adding it to the config.json.
 
 This plugin contains a discovery function for broadlink devices and a RemoteDevice for remote controlling TV's, etc, via a broadlink device.  
