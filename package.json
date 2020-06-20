@@ -16,7 +16,7 @@
     "broadlink_cli.py",
     "broadlink_discovery.py"
   ],
-  "homepage": "https://github.com/bertreb/pimatic-broadlink.git",
+  "homepage": "https://github.com/bertreb/pimatic-broadlink",
   "keywords": [
     "pimatic",
     "broadlink"
