@@ -32,7 +32,7 @@ No quotes around SSID and PASSPHRASE and your wifi security needs to be WPA.
 The broadlink device should now connect to the configured wifi. You can reconnect to the normal network.
 
 
-If want you can use another system to configure the broadlink wifi. You need to have python3 and broadlink installed. 
+If you don't want to change your pimatic system wifi settings, you can use another system to configure the broadlink wifi. You need to have python3 and broadlink installed. 
 Copy from the plugin directory the python script **broadlink_cli.py** to the directory you want to use for executing the script.
 Follow the steps:
 - Put the broadlink device into AP Mode = Long press (>10 secs) the reset button until the blue LED is blinking quickly.
