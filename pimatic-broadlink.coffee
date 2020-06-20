@@ -42,7 +42,6 @@ module.exports = (env) ->
             return
           devices =_.flatten(results)
           env.logger.debug "Discovered devices: "+ JSON.stringify(devices,null,2)
-          env.logger.info "tot hier 4"
           for _device,i in devices
             unless _device.error?
               _newId = _device.type + "_" + _device.mac.split(":").join("")
