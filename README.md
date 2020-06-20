@@ -15,7 +15,7 @@ Installation
 
 In commandline mode:
 ```
-sudu pip3 install broadlink
+pip3 install broadlink
 ```
 - Install the plugin
 The plugin can be installed via the gui or adding it to the config.json.
@@ -26,7 +26,7 @@ The plugin can be installed via the gui or adding it to the config.json.
 3. Manually connect to the WiFi SSID named BroadlinkProv (or Broadlink_WIFI_device).
 4. In commandline mode go to /pimatic-app/node_modules/pimatic-broadlink and run 
 ```
-sudo python3 broadlink_cli.py --joinwifi SSID PASSPHRASE
+python3 broadlink_cli.py --joinwifi SSID PASSPHRASE
 ```
 No quotes around SSID and PASSPHRASE and your wifi security needs to be WPA.
 The broadlink device should now connect to the configured wifi. You can reconnect to the normal network.
