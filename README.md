@@ -10,17 +10,17 @@ The following devices are currently supported:
 
 Installation
 ----
--. Python3 needs to be installed.
--. Install the python library broadlink.
+- Python3 needs to be installed.
+- Install the python library broadlink.
 
 In commandline mode:
 ```
 sudu pip3 install broadlink
 ```
--. Install the plugin
+- Install the plugin
 The plugin can be installed via the gui or adding it to the config.json.
 
--. Configure the wifi of the broadlink device via the Broadlink app (easy but you will need to connect to the broadlink cloud) or use the following steps:
+- Configure the wifi of the broadlink device via the Broadlink app (easy but you will need to connect to the broadlink cloud) or use the following steps:
 1. Put the broadlink device into AP Mode = Long press (>10 secs) the reset button until the blue LED is blinking quickly.
 2. Long press again until blue LED is blinking slowly.
 3. Manually connect to the WiFi SSID named BroadlinkProv (or Broadlink_WIFI_device).
