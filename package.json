@@ -14,14 +14,16 @@
     "README.md",
     "LICENSE",
     "broadlink_cli.py",
-    "broadlink_discovery.py"
+    "broadlink_discovery.py",
+    "app/broadlink.coffee",
+    "app/broadlink.jade"
   ],
   "homepage": "https://github.com/bertreb/pimatic-broadlink",
   "keywords": [
     "pimatic",
     "broadlink"
   ],
-  "version": "0.0.10",
+  "version": "0.0.11",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/bertreb/pimatic-broadlink.git"

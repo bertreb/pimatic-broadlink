@@ -1,0 +1,11 @@
+script#broadlink-remote-template(type='text/template')
+  li.sortable.button.no-header.broadlink-device
+    label.device-label(data-bind="text: name, tooltip: $data.labelTooltipHtml")
+    div.buttons(data-bind="foreach: $data.device.configWithDefaults().buttons")
+      <!-- ko if: $data.id == $parent.buttonId() -->
+      a.ui-btn.ui-mini.ui-btn-inline.ui-corner-all.ui-btn-active(data-bind="attr:{ id: $data.id }, jqmbutton: {text: $data.text}, click: $parent.onButtonPress")
+      <!-- /ko -->
+      <!-- ko ifnot: $data.id == $parent.buttonId() -->
+      a.ui-btn.ui-mini.ui-btn-inline.ui-corner-all(data-bind="attr:{ id: $data.id }, jqmbutton: {text: $data.text}, click: $parent.onButtonPress")
+      <!-- /ko -->
+    span.attributes(data-bind="template: { name: 'attribute-template', foreach: $data.device.attributes, afterRender: $data.afterAttributeRender }")
