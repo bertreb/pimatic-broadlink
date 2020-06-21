@@ -27,6 +27,22 @@ module.exports = (env) ->
         configDef: deviceConfigDef.BroadlinkRemote,
         createCallback: (config, lastState) => new BroadlinkRemote(config, lastState, @framework, @)
       })
+      ###
+      @framework.deviceManager.registerDeviceClass('BroadlinkAmbiant', {
+        configDef: deviceConfigDef.BroadlinkAmbiant,
+        createCallback: (config, lastState) => new BroadlinkAmbiant(config, lastState, @framework, @)
+      })
+      ###
+
+      @framework.on "after init", =>
+        # Check if the mobile-frontent was loaded and get a instance
+        mobileFrontend = @framework.pluginManager.getPlugin 'mobile-frontend'
+        if mobileFrontend?
+          mobileFrontend.registerAssetFile 'js', "pimatic-broadlink/app/broadlink.coffee"
+          #mobileFrontend.registerAssetFile 'css', "pimatic-meross/app/css/meross.css"
+          mobileFrontend.registerAssetFile 'html', "pimatic-broadlink/app/broadlink.jade"
+        else
+          env.logger.warn "your plugin could not find the mobile-frontend. No gui will be available"
 
       @framework.deviceManager.on('discover', (eventData) =>
         @framework.deviceManager.discoverMessage 'pimatic-broadlink', 'Searching for new devices'
@@ -63,13 +79,56 @@ module.exports = (env) ->
       )
 
 
-  class BroadlinkRemote extends env.devices.ButtonsDevice
+  class BroadlinkRemote extends env.devices.Device
+
+    attributes:
+      button:
+        description: "The last pressed button"
+        type: "string"
+      temperature:
+        description: "temperature"
+        type: "number"
+        unit: "C"
+        acronym: "temp"
+      humidity:
+        description: "humidity"
+        type: "number"
+        unit: "%"
+        acronym: "hum"
+    actions:
+      buttonPressed:
+        params:
+          buttonId:
+            type: "string"
+        description: "Press a button"
+
+    template: "broadlink-remote"
+
+    _lastPressedButton: null
+
 
     constructor: (@config, lastState, @framework, @plugin) ->
       #@config = config
-      super(@config)
+      #super(@config)
       @id = @config.id
       @name = @config.name
+
+      @pollingTime = @config.pollingTime ? 300000
+
+      if @_destroyed then return
+
+      @attributeValues = {}
+
+      for s of @attributes
+        @attributes[s].displaySparkline = false
+        @_createGetter(s, =>
+          return Promise.resolve @attributeValues[s]
+        )
+        @attributeValues[s] = laststate?[s]?.value ? 0.0
+
+      @_lastPressedButton = lastState?.button?.value
+      #@_setTemperature(0)
+      @attributes.button.hidden = true
 
       @root = path.resolve @framework.maindir, '../..'
       @directory = path.join(@root,"learned-codes")
@@ -104,6 +163,14 @@ module.exports = (env) ->
       if newFound > 1
         throw new Error("Detected #{newFound} new buttons, only 1 new button at a time can be added!")
 
+      getSensors = () =>
+        @getBroadlinkSensors()
+        @getSensorsTimer = setTimeout(getSensors, @pollingTime)
+      getSensors()
+
+      super()
+
+
     learn:(_name)=>
       return new Promise((resolve,reject) =>
         sendOptions =
@@ -123,6 +190,29 @@ module.exports = (env) ->
         )
       )
 
+    getBroadlinkSensors: () =>
+      sendOptions =
+        mode: 'json'
+        pythonPath: 'python3'
+        scriptPath: __dirname
+        args: ['--device',@_device,'--sensors']
+      return ps.PythonShell.run('broadlink_cli.py', sendOptions, (err,result) =>
+        if err
+          env.logger.debug "Error  requesting temperature: " + err
+          #Promise.reject err
+          return
+        env.logger.debug "Sensor data received: " + JSON.stringify(result,null,2)
+        unless @_destroyed then return
+        for s in @config.sensors
+          if result[0][s.name]?
+            @setAttr(s.name,result[0][s.name])
+      )
+
+    setAttr: (name, data) =>
+      @attributeValues[name] = data
+      @emit 'name', data
+
+    getTemplateName: -> "broadlink-remote"
 
     getButton: -> Promise.resolve(@_lastPressedButton)
 
@@ -131,7 +221,6 @@ module.exports = (env) ->
         if b.id is buttonId
           @_lastPressedButton = b.id
           @emit 'button', b.id
-          command = b.onPress
           commandFile = path.join("@"+@directory,b.commandFile)
           sendOptions =
             mode: 'text'
@@ -150,6 +239,19 @@ module.exports = (env) ->
           else
             return Promise.resolve()
       throw new Error("No button with the id #{buttonId} found")
+
+    destroy:() =>
+      #@_destroyed = true
+      clearTimeout(@getSensorsTimer)
+      super()
+
+  class BroadlinkAmbiant extends env.devices.Device
+
+    constructor: (@config, lastState, @framework, @plugin) ->
+      #@config = config
+      super(@config)
+      @id = @config.id
+      @name = @config.name
 
     destroy:() =>
       @_destroyed = true

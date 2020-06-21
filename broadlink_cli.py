@@ -123,8 +123,9 @@ if args.sensors:
     except:
         data = {}
         data['temperature'] = dev.check_temperature()
-    for key in data:
-        print("{} {}".format(key, data[key]))
+    print(json.dumps(data))
+    #for key in data:
+    #    #print("{} {}".format(key, data[key]))
 if args.send:
     data = durations_to_broadlink(parse_durations(' '.join(args.data))) \
         if args.durations else bytearray.fromhex(''.join(args.data))

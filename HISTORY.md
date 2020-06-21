@@ -10,3 +10,5 @@
 	* check on 1 new button at a time
 	* error handling when BroadlinkRemote is offline
 	* update README
+* 20200621, v0.0.10
+	* add sensor values
