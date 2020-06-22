@@ -97,15 +97,15 @@ module.exports = (env) ->
         acronym: "hum"
       light:
         description: "light"
-        type: "number"
+        type: "string"
         acronym: "light"
       air_quality:
         description: "Air quality"
-        type: "number"
+        type: "string"
         acronym: "air"
       noise:
         description: "noise"
-        type: "number"
+        type: "string"
         acronym: "noise"
     actions:
       buttonPressed:
@@ -225,7 +225,7 @@ module.exports = (env) ->
             if _result[s]?
               @setAttr(s,_result[s])
         catch e
-          env.logger.debug "Error Sensor data received: " + JSON.stringify(result,null,2)        
+          env.logger.debug "Error Sensor data received: " + JSON.stringify(result,null,2)
       )
 
     setAttr: (name, data) =>

@@ -21,3 +21,5 @@
 * 20200622, v0.0.15
 	* add sensors
 	* make sensor selectable in gui
+* 20200622, v0.0.16
+	* change noise, air_quality and light type to string
