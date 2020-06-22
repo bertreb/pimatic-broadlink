@@ -18,3 +18,6 @@
 	* update error handling
 * 20200622, v0.0.14
 	* fix attribute name
+* 20200622, v0.0.15
+	* add sensors
+	* make sensor selectable in gui

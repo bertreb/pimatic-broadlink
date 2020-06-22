@@ -95,6 +95,18 @@ module.exports = (env) ->
         type: "number"
         unit: "%"
         acronym: "hum"
+      light:
+        description: "light"
+        type: "number"
+        acronym: "light"
+      air_quality:
+        description: "Air quality"
+        type: "number"
+        acronym: "air"
+      noise:
+        description: "noise"
+        type: "number"
+        acronym: "noise"
     actions:
       buttonPressed:
         params:
@@ -105,7 +117,6 @@ module.exports = (env) ->
     template: "broadlink-remote"
 
     _lastPressedButton: null
-
 
     constructor: (@config, lastState, @framework, @plugin) ->
       #@config = config
@@ -121,6 +132,10 @@ module.exports = (env) ->
 
       for s of @attributes
         @attributes[s].displaySparkline = false
+        if _.find(@config.sensors, (sensor)=> sensor.id is s)
+          @attributes[s].hidden = false
+        else
+          @attributes[s].hidden = true
         @_createGetter(s, =>
           return Promise.resolve @attributeValues[s]
         )
@@ -128,9 +143,8 @@ module.exports = (env) ->
 
       @_lastPressedButton = lastState?.button?.value
       #@_setTemperature(0)
-      @attributes.button.hidden = true
 
-      @sensors = ["temperature","humidity"]
+      @sensors = ["temperature","humidity","light","air_quality","noise"]
 
       @root = path.resolve @framework.maindir, '../..'
       @directory = path.join(@root,"learned-codes")
@@ -211,9 +225,7 @@ module.exports = (env) ->
             if _result[s]?
               @setAttr(s,_result[s])
         catch e
-          env.logger.debug "Error Sensor data received: " + JSON.stringify(result,null,2)
-
-        
+          env.logger.debug "Error Sensor data received: " + JSON.stringify(result,null,2)        
       )
 
     setAttr: (name, data) =>

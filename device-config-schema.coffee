@@ -28,6 +28,18 @@ module.exports = {
             commandFile:
               description: "The filename of the commandfile"
               type: "string"
+      sensors:
+        description: "the sensor value to shown in the gui"
+        format: "table"
+        type: "array"
+        default: []
+        items:
+          type: "object"
+          properties:
+            id:
+              desscription: "the sensor name"
+              type: "string"
+              enum: ["temperature","humidity","light","air_quality","noise"]
       pollingTime:
         description: "time in ms between polling of temperature/humidity sensor (default 5 min)"
         type: "number"
