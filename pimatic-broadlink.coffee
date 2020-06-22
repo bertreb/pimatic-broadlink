@@ -210,7 +210,7 @@ module.exports = (env) ->
           if @_destroyed then return
           for s in @sensors
             if _result[s]?
-              @setAttr(s.name,_result[s])
+              @setAttr(s,_result[s])
         catch e
           env.logger.debug "Error Sensor data received: " + JSON.stringify(result,null,2)
 

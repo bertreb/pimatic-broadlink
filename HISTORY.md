@@ -16,3 +16,5 @@
 	* added missing files package
 * 20200622, v0.0.12
 	* update error handling
+* 20200622, v0.0.13
+	* fix attribute name
