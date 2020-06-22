@@ -12,3 +12,7 @@
 	* update README
 * 20200621, v0.0.10
 	* add sensor values
+* 20200621, v0.0.11
+	* added missing files package
+* 20200622, v0.0.12
+	* update error handling

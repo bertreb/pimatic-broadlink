@@ -130,6 +130,8 @@ module.exports = (env) ->
       #@_setTemperature(0)
       @attributes.button.hidden = true
 
+      @sensors = ["temperature","humidity"]
+
       @root = path.resolve @framework.maindir, '../..'
       @directory = path.join(@root,"learned-codes")
       unless fs.existsSync(@directory)
@@ -192,20 +194,27 @@ module.exports = (env) ->
 
     getBroadlinkSensors: () =>
       sendOptions =
-        mode: 'json'
+        mode: 'text'
         pythonPath: 'python3'
         scriptPath: __dirname
         args: ['--device',@_device,'--sensors']
       return ps.PythonShell.run('broadlink_cli.py', sendOptions, (err,result) =>
+        #env.logger.debug "Raw result: " + result
         if err
           env.logger.debug "Error  requesting temperature: " + err
           #Promise.reject err
           return
-        env.logger.debug "Sensor data received: " + JSON.stringify(result,null,2)
-        unless @_destroyed then return
-        for s in @config.sensors
-          if result[0][s.name]?
-            @setAttr(s.name,result[0][s.name])
+        try
+          _result = JSON.parse(result)
+          env.logger.debug "Sensor data received: " + JSON.stringify(_result,null,2)
+          if @_destroyed then return
+          for s in @sensors
+            if _result[s]?
+              @setAttr(s.name,_result[s])
+        catch e
+          env.logger.debug "Error Sensor data received: " + JSON.stringify(result,null,2)
+
+        
       )
 
     setAttr: (name, data) =>
