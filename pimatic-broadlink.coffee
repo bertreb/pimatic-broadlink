@@ -207,7 +207,6 @@ module.exports = (env) ->
         try
           _result = JSON.parse(result)
           env.logger.debug "Sensor data received: " + JSON.stringify(_result,null,2)
-          if @_destroyed then return
           for s in @sensors
             if _result[s]?
               @setAttr(s,_result[s])
@@ -219,7 +218,7 @@ module.exports = (env) ->
 
     setAttr: (name, data) =>
       @attributeValues[name] = data
-      @emit 'name', data
+      @emit name, data
 
     getTemplateName: -> "broadlink-remote"
 
