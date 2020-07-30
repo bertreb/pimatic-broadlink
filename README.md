@@ -61,6 +61,14 @@ Sensor attributeValues
 The RM device can also provides sensor data like temperature or humidity. In the device config you can add sensors. The value name should be available in the RM. When configured sensor data is received it will be displayed in the gui.
 The sensors are read via polling, you can set the polling interval via pollingTime in the config.
 
+
+Rules
+----
+You can control the buttons via rules. The syntax is:
+```
+remote press <broadlink rm button name>
+```
+
 ---
 The minimum requirement for node is 10.
 
